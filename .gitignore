@@ -1,0 +1,54 @@
+# -----------------------------------
+# Laravel / PHP backend ignores
+# -----------------------------------
+/backend/vendor/
+/backend/node_modules/
+.env
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# Ignore Laravel logs, cache, compiled files
+/backend/storage/*.key
+/backend/storage/logs/
+/backend/storage/framework/cache/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/views/*
+/backend/public/storage
+
+# -----------------------------------
+# React / Next frontend ignores
+# -----------------------------------
+/frontend/node_modules/
+/frontend/.next/
+/frontend/out/
+/frontend/.turbo/
+/frontend/dist/
+/frontend/build/
+
+# Debug logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Misc cache
+frontend/.eslintcache
+frontend/.parcel-cache
+frontend/.vscode/
+frontend/.idea/
+.DS_Store
+Thumbs.db
+
+# -----------------------------------
+# Global ignores
+# -----------------------------------
+/node_modules/
+/vendor/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

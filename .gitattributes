@@ -1,0 +1,38 @@
+# -----------------------------------
+# Line endings normalization
+# -----------------------------------
+# Always use LF in the repo (consistent across OS)
+* text=auto eol=lf
+
+# -----------------------------------
+# Backend (Laravel / PHP)
+# -----------------------------------
+*.php text eol=lf
+*.blade.php text eol=lf
+
+# -----------------------------------
+# Frontend (React / JS / TS)
+# -----------------------------------
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.md   text eol=lf
+
+# -----------------------------------
+# Windows / Binary files
+# -----------------------------------
+# Don’t modify line endings in binaries
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.exe binary
+*.dll binary
