@@ -25,6 +25,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
+            'is_admin' => false, // Default to non-admin
         ]);
 
         // Log the user in immediately after registration

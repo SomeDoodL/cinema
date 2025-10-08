@@ -6,6 +6,7 @@ type User = {
   name: string;
   email: string;
   avatar?: string;
+  is_admin?: boolean;
 };
 
 type UserContextType = {

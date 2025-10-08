@@ -62,8 +62,8 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <ul className="hidden md:flex gap-8 items-center font-semibold">
           <li>
-            <Link href="/about" className="hover:text-red-600 transition-colors duration-300 text-2xl">
-              About
+            <Link href="/blogs" className="hover:text-red-600 transition-colors duration-300 text-2xl">
+              Blogs
             </Link>
           </li>
           <li>
@@ -132,11 +132,11 @@ export default function Navbar() {
         }}
       >
         <Link
-          href="/about"
+          href="/blogs"
           className="block hover:text-red-600 transition-colors duration-300"
           onClick={() => setIsOpen(false)}
         >
-          About
+          Blogs
         </Link>
         <Link
           href="/skills"
