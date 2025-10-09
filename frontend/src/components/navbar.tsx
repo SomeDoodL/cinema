@@ -22,7 +22,7 @@ export default function Navbar() {
   const [scrollY, setScrollY] = useState(0);
 
   const handleLogout = async () => {
-    await fetch("http://localhost:8000/logout", {
+    await fetch("http://localhost:8000/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });

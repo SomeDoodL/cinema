@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // ✅ import Link
+import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 
 const pageVariants = {
@@ -16,46 +16,33 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { fetchUser } = useUser();
+  const { setUser, fetchUser } = useUser();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const csrfRes = await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-        credentials: "include",
-      });
-      if (!csrfRes.ok) throw new Error("Failed to get CSRF cookie");
-
-      const getCookie = (name: string) => {
-        const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-        return match ? decodeURIComponent(match[2]) : null;
-      };
-
-      const res = await fetch("http://localhost:8000/login", {
+      // Send login request to Express backend
+      const res = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-XSRF-TOKEN": getCookie("XSRF-TOKEN") || "",
-        },
-        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // important for cookie-based JWT
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        await fetchUser(); // Refresh user context
-        alert("Login successful!");
-        router.push("/");
-      } else {
-        alert(data.message || "Login failed!");
-      }
+      if (!res.ok) throw new Error(data.message || "Login failed");
+
+      // Set user in context
+      setUser(data.user);
+      await fetchUser(); // refresh user info if needed
+
+      router.push("/"); // redirect after login
     } catch (err: any) {
       console.error("Login error:", err);
-      alert(err.message || "Login failed! Check console.");
+      alert(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -82,6 +69,7 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 outline-none text-red-600 placeholder-gray-400"
+          required
         />
 
         <input
@@ -90,20 +78,21 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 outline-none text-red-600 placeholder-gray-400"
+          required
         />
 
         <button
           type="submit"
+          disabled={loading}
           className="bg-red-600 hover:bg-red-500 text-white font-semibold py-3 rounded-lg transition-all duration-200 active:scale-95"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
-        {/* 🔹 Register link */}
         <p className="text-center text-sm text-gray-600 mt-2">
           Don't have an account?{" "}
           <Link href="/register" className="text-red-600 font-semibold hover:underline">
-            register here
+            Register here
           </Link>
         </p>
       </form>

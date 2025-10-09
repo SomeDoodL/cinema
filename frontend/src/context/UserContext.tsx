@@ -1,56 +1,35 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
-type User = {
-  id: number;
+interface User {
+  id: string;
   name: string;
   email: string;
   avatar?: string;
-  is_admin?: boolean;
-};
+  role?: string;
+}
 
-type UserContextType = {
+interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void; // now required
+  setUser: (user: User | null) => void;
   fetchUser: () => Promise<void>;
-  logout: () => Promise<void>;
-};
+}
 
-const UserContext = createContext<UserContextType>({
-  user: null,
-  setUser: () => {},
-  fetchUser: async () => {},
-  logout: async () => {},
-});
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export function UserProvider({ children }: { children: ReactNode }) {
+export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const fetchUser = async () => {
     try {
-      const res = await fetch("http://localhost:8000/user", {
+      const res = await fetch("http://localhost:8000/api/auth/user", {
         credentials: "include",
       });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
-        setUser(null);
-      }
-    } catch {
+      if (!res.ok) return setUser(null);
+      const data = await res.json();
+      setUser(data.user);
+    } catch (err) {
       setUser(null);
-    }
-  };
-
-  const logout = async () => {
-    setUser(null); // clear immediately
-    try {
-      await fetch("http://localhost:8000/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-    } catch {
-      // ignore
     }
   };
 
@@ -59,10 +38,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, fetchUser, logout }}>
+    <UserContext.Provider value={{ user, setUser, fetchUser }}>
       {children}
     </UserContext.Provider>
   );
-}
+};
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) throw new Error("useUser must be used within a UserProvider");
+  return context;
+};
